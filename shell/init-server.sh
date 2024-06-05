@@ -256,15 +256,18 @@ other_option(){
         echo ""
         echo ""
         echo "请选择要执行的操作："
-        echo "----------------------------------"
+        echo "---------------常用功能-----------------"
         echo "1. 安装UFW"
         echo "2. 安装Xray"
-        echo "3. 清除默认防火墙规则(oracle)"
-        echo "4. 添加Swap"
-        echo "5. 三网回程检测"
-        echo "6. 检测IP质量(执行前记得保存屏幕中的信息)"
-        echo "7. 流媒体解锁测试(执行前记得保存屏幕中的信息)"
-        echo "----------------------------------"
+        echo "3. 添加Swap"
+        echo "4. 安装iperf3"
+        echo "5. 安装nexttrace"
+        echo "6. 清除默认防火墙规则(oracle)"
+        echo "---------------常用检测------------------"
+        echo "7. 三网回程检测"
+        echo "8. IP质量检测(执行前记得保存屏幕中的信息)"
+        echo "9. 流媒体解锁检测(执行前记得保存屏幕中的信息)"
+        echo "----------------------------------------"
         echo_yellow "0. 退出脚本"
         echo ""
         read -p "请输入数字 (0-7): " user_input
@@ -281,26 +284,38 @@ other_option(){
                 echo_info "Xray安装完成"
                 ;;
             3)
-                iptables -F
-                echo_info "清除默认防火墙规则完成"
-                ;;
-            4)
+                # 添加Swap
                 wget https://www.moerats.com/usr/shell/swap.sh && bash swap.sh
                 ;;
+            4)
+                echo_info "安装iperf3..."
+                apt install iperf3 -y
+                echo_info "iperf3安装完成"
+                ;;
             5)
+                echo_info "安装nxtrace..."
+                curl nxtrace.org/nt | bash
+                echo_info "iperf3安装完成"
+                ;;
+            6)
+                echo_info "清除默认防火墙规则(oracle)开始..."
+                iptables -F
+                echo_info "清除默认防火墙规则(oracle)完成"
+                ;;
+            7)
                 echo_info "三网回程检测开始..."
                 curl https://raw.githubusercontent.com/zhanghanyun/backtrace/main/install.sh -sSf | sh
                 echo_info "三网回程检测完成"
                 ;;
-            6)
-                echo_info "检测IP质量开始..."
+            8)
+                echo_info "IP质量检测开始..."
                 bash <(curl -Ls ip.check.place)
                 echo_info "检测IP质量完成"
                 ;;
-            7)
-                echo_info "流媒体检测开始..."
+            9)
+                echo_info "流媒体解锁检测开始..."
                 bash <(curl -L -s media.ispvps.com)
-                echo_info "流媒体检测完成"
+                echo_info "流媒体解锁检测完成"
                 ;;
             0)
                 echo "退出脚本"

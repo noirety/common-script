@@ -22,6 +22,7 @@ query_traffic() {
   fi
 }
 
+echo "---------------------"
 # 遍历所有传入的参数（用户名）
 for name in "$@"; do
   # 查询下载量和上传量
@@ -29,8 +30,8 @@ for name in "$@"; do
   up_value=$(query_traffic "$name" "uplink")
 
   # 输出结果
-  echo "$name:"
-  echo "下载量：$down_value"
-  echo "上传量：$up_value"
+  echo "用户: $name"
+  echo "下载量: $down_value"
+  echo "上传量: $up_value"
   echo "---------------------"
 done

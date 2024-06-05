@@ -2,11 +2,9 @@
 
 # 检查是否提供了参数
 if [ -z "$1" ]; then
-  echo "请提供查询参数"
+  echo "请提供查询用户"
   exit 1
 fi
-
-name=$1
 
 # 函数：查询流量并转换为 MB
 query_traffic() {
@@ -18,11 +16,14 @@ query_traffic() {
   echo $value_in_mb
 }
 
-# 查询下载量和上传量
-down_value_in_mb=$(query_traffic $name "downlink")
-up_value_in_mb=$(query_traffic $name "uplink")
-
-# 输出结果
-echo "$name:"
-echo "下载量：$down_value_in_mb MB"
-echo "上传量：$up_value_in_mb MB"
+# 遍历所有传入的参数（用户名）
+for name in "$@"; do
+  # 查询下载量和上传量
+  down_value_in_mb=$(query_traffic "$name" "downlink")
+  up_value_in_mb=$(query_traffic "$name" "uplink")
+  # 输出结果
+  echo "用户: $name"
+  echo "下载量: $down_value_in_mb MB"
+  echo "上传量: $up_value_in_mb MB"
+  echo "---------------------"
+done

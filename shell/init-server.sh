@@ -256,21 +256,21 @@ other_option(){
         echo ""
         echo ""
         echo "请选择要执行的操作："
-        echo "---------------常用功能-----------------"
+        echo "---------------常用功能---------------------------"
         echo "1. 安装UFW"
         echo "2. 安装Xray"
         echo "3. 添加Swap"
         echo "4. 安装iperf3"
         echo "5. 安装nexttrace"
         echo "6. 清除默认防火墙规则(oracle)"
-        echo "---------------常用检测------------------"
+        echo "---------------常用检测----------------------------"
         echo "7. 三网回程检测"
         echo "8. IP质量检测(执行前记得保存屏幕中的信息)"
         echo "9. 流媒体解锁检测(执行前记得保存屏幕中的信息)"
-        echo "----------------------------------------"
+        echo "--------------------------------------------------"
         echo_yellow "0. 退出脚本"
         echo ""
-        read -p "请输入数字 (0-7): " user_input
+        read -p "请输入数字 (0-9): " user_input
 
         case $user_input in
             1)
@@ -295,7 +295,7 @@ other_option(){
             5)
                 echo_info "安装nxtrace..."
                 curl nxtrace.org/nt | bash
-                echo_info "iperf3安装完成"
+                echo_info "nxtrace安装完成"
                 ;;
             6)
                 echo_info "清除默认防火墙规则(oracle)开始..."

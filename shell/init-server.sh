@@ -102,17 +102,14 @@ modify_sshd_port() {
 
     echo_info "修改端口号完成，ssh端口号：$new_port"
 
-    # 修改sshd配置文件
-    modify_sshd_config
     # 重启sshd服务
     restart_sshd_service
 }
 
 # 函数：修改 sshd_config 文件
 # 参数 $1: 输入的端口
-modify_sshd_config() {
+forbidden_root_login() {
 
-    echo_info "禁止 Root 用户登录开始"
     # 注释掉 Include /etc/ssh/sshd_config.d/*.conf 行
     sed -i 's/^Include \/etc\/ssh\/sshd_config.d\/\*\.conf/# &/' /etc/ssh/sshd_config
     check_error "注释掉 Include 行时出错"
@@ -125,7 +122,7 @@ modify_sshd_config() {
         echo 'PermitRootLogin no' | tee -a /etc/ssh/sshd_config > /dev/null
         check_error "追加 PermitRootLogin 时出错"
     fi
-
+    echo_info "禁止 Root 用户登录完成"
     # 修改为PasswordAuthentication yes
     if grep -q '^PasswordAuthentication' /etc/ssh/sshd_config; then
         sed -i 's/^PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
@@ -134,8 +131,7 @@ modify_sshd_config() {
         echo 'PasswordAuthentication yes' | tee -a /etc/ssh/sshd_config > /dev/null
         check_error "追加 PasswordAuthentication 时出错"
     fi
-
-    echo_info "禁止 Root 用户登录完成"
+    echo_info "开启密码登录完成"
 }
 
 # 函数：重启 SSHD 服务
@@ -195,7 +191,6 @@ add_user() {
 
     local password=$(generate_valid_password)
     
-
     # 创建用户
     adduser --disabled-password --gecos "" $newuser
     echo "$newuser:$password" | chpasswd
@@ -207,6 +202,11 @@ add_user() {
     echo_info "新建用户完成"
     echo -e "${Font_Blue}用户名:${Font_Suffix} ${Font_Red}$newuser${Font_Suffix}"
     echo -e "${Font_Blue}密  码:${Font_Suffix} ${Font_Red}$password${Font_Suffix}"
+
+    # 修改sshd配置文件
+    forbidden_root_login
+    # 重启sshd服务
+    restart_sshd_service
 }
 
 # 设置时区

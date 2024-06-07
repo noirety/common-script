@@ -18,6 +18,10 @@ Back_Cyan="\033[46m"
 Back_White="\033[47m"
 Font_Suffix="\033[0m"
 
+Font_Green_Bold="\033[1;32m"
+Font_Yellow_Bold="\033[1;33m"
+Font_Blue_Bold="\033[1;34m"
+
 echo_info(){
     local info="$1"
     echo -e "${Font_Blue}$info${Font_Suffix}"
@@ -322,11 +326,11 @@ main_option(){
                 curl nxtrace.org/nt | bash
                 echo_info "nxtrace安装完成"
 
-                echo_info "检测重庆电信..."
+                echo -e "${Font_Blue_Bold}检测重庆电信...${Font_Suffix}"
                 nexttrace 219.153.159.189
-                echo_info "检测重庆联通..."
+                echo -e "${Font_Yellow_Bold}检测重庆联通...${Font_Suffix}"
                 nexttrace 113.207.90.56
-                echo_info "检测重庆移动..."
+                echo -e "${Font_Green_Bold}检测重庆联通...${Font_Suffix}"
                 nexttrace 111.10.61.226
                 ;;
             6)

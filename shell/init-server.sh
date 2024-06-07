@@ -242,9 +242,9 @@ set_ipv4_priority(){
         echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf
     fi
     echo_info '测试IPv4优先度:'
-    curl -s ip.p3terx.com | head -n 1
-    ipv4=$(curl -s ip.gs)
-    ipv6=$(curl -6 -s ip.gs)
+    curl -s --connect-timeout 3 -m 5 ip.p3terx.com | head -n 1
+    ipv4=$(curl -s --connect-timeout 3 -m 5 ip.gs)
+    ipv6=$(curl -6 -s --connect-timeout 3 -m 5 ip.gs)
     echo_info '设置IPv4优先完成'
     echo -e "${Font_Blue}当前主机ipv4地址: ${Font_Suffix}${Font_Red}${ipv4}${Font_Suffix}"
     echo -e "${Font_Blue}当前主机ipv6地址: ${Font_Suffix}${Font_Red}${ipv6}${Font_Suffix}"

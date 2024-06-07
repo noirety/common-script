@@ -326,11 +326,14 @@ main_option(){
                 curl nxtrace.org/nt | bash
                 echo_info "nxtrace安装完成"
 
+                echo ""
                 echo -e "${Font_Blue_Bold}检测重庆电信...${Font_Suffix}"
                 nexttrace 219.153.159.189
+                echo ""
                 echo -e "${Font_Yellow_Bold}检测重庆联通...${Font_Suffix}"
                 nexttrace 113.207.90.56
-                echo -e "${Font_Green_Bold}检测重庆联通...${Font_Suffix}"
+                echo ""
+                echo -e "${Font_Green_Bold}检测重庆移动...${Font_Suffix}"
                 nexttrace 111.10.61.226
                 ;;
             6)

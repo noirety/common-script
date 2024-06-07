@@ -147,7 +147,7 @@ update_install_software() {
     apt update
     check_error "更新软件包列表时出错"
 
-    apt install -y vim nano net-tools inetutils-ping telnet
+    apt install -y vim nano net-tools inetutils-ping telnet ufw
     check_error "安装软件包时出错"
     echo_info "更新软件包完成"
     echo ""
@@ -251,17 +251,44 @@ set_ipv4_priority(){
     echo ""
 }
 
-other_option(){
+base_setting() {
+    # 更新软件
+    update_install_software
+
+    # 开启BBR
+    enable_bbr
+
+    # 设置时区为上海
+    set_timezone_shanghai
+
+    # 设置IPV4优先
+    set_ipv4_priority
+
+    # 修改hostname
+    read -p "请输入新的主机名(输入为空跳过): " newHostname
+    modify_hostname $newHostname
+
+    # 创建新用户
+    read -p "请输入新的用户名(输入为空跳过): " newUser
+    add_user $newUser
+
+    # 修改ssh端口
+    read -p "请输入新的ssh端口(输入为空跳过): " sshPort
+    modify_sshd_port $sshPort
+}
+
+main_option(){
     while true; do
         echo ""
         echo ""
         echo "请选择要执行的操作："
+        echo "---------------基础设置---------------------------"
+        echo_red "1. 初始化设置（修改主机名、创建用户、修改ssh端口...）"
         echo "---------------常用功能---------------------------"
-        echo "1. 安装UFW"
         echo "2. 安装Xray"
         echo "3. 添加Swap"
         echo "4. 安装iperf3"
-        echo "5. 安装nexttrace"
+        echo "5. 安装&检测nexttrace"
         echo "6. 清除默认防火墙规则(oracle)"
         echo "---------------常用检测----------------------------"
         echo "7. 三网回程检测"
@@ -274,9 +301,7 @@ other_option(){
 
         case $user_input in
             1)
-                echo_info "安装UFW..."
-                apt-get install -y ufw
-                echo_info "UFW安装完成"
+                base_setting
                 ;;
             2)
                 echo_info "安装Xray..."
@@ -293,9 +318,16 @@ other_option(){
                 echo_info "iperf3安装完成"
                 ;;
             5)
-                echo_info "安装nxtrace..."
+                echo_info "安装&检测nxtrace..."
                 curl nxtrace.org/nt | bash
                 echo_info "nxtrace安装完成"
+
+                echo_info "检测重庆电信..."
+                nexttrace 219.153.159.189
+                echo_info "检测重庆联通..."
+                nexttrace 113.207.90.56
+                echo_info "检测重庆移动..."
+                nexttrace 111.10.61.226
                 ;;
             6)
                 echo_info "清除默认防火墙规则(oracle)开始..."
@@ -331,31 +363,8 @@ other_option(){
 
 # 主函数
 main() {
-    # 更新软件
-    update_install_software
 
-    # 开启BBR
-    enable_bbr
-
-    # 设置时区为上海
-    set_timezone_shanghai
-
-    # 设置IPV4优先
-    set_ipv4_priority
-
-    # 修改hostname
-    read -p "请输入新的主机名(输入为空跳过): " newHostname
-    modify_hostname $newHostname
-
-    # 创建新用户
-    read -p "请输入新的用户名(输入为空跳过): " newUser
-    add_user $newUser
-
-    # 修改ssh端口
-    read -p "请输入新的ssh端口(输入为空跳过): " sshPort
-    modify_sshd_port $sshPort
-
-    other_option
+    main_option
 
     # 删除下载的脚本
     rm -f "$0"

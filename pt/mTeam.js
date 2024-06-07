@@ -1,9 +1,9 @@
-const searchUrl = "https://xp.m-team.cc/api/torrent/search";
-const historyUrl = "https://xp.m-team.cc/api/tracker/queryHistory";
-const seedLinkUrl = "https://xp.m-team.cc/api/torrent/genDlToken";
-const downloadPrefix = "https://xp.m-team.cc/api/rss/dl?credential=";
+const searchUrl = "https://api.m-team.io/api/torrent/search";
+const historyUrl = "https://api.m-team.io/api/tracker/queryHistory";
+const seedLinkUrl = "https://api.m-team.io/api/torrent/genDlToken";
+const downloadPrefix = "https://api.m-team.io/api/rss/dlv2";
 // 种子从小到大排序，获取从第几页到第几页的种子链接
-const startPage = 15;
+const startPage = 17;
 const endPage = 47;
 // -1不限制获取条数，根据页数来，其他正值，限制获取种子数
 const getSeedNum = -1;

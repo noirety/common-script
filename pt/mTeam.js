@@ -120,19 +120,19 @@ async function main() {
                 // 做种人数
                 let seeders = tempSeed.status.seeders;
                 // 是否有官种魔力加成，会稀释高加成种
-                let msUp = tempSeed.msUp;
+                // let msUp = tempSeed.msUp;
                 // 是否正在下载或者已下载完成
                 let isDown = seedingList.includes(id);
                 // 促销状态：NORMAL 无促销 PERCENT_50 50%下载 FREE 免费下载
-                let discount = tempSeed.status.discount;
+                // let discount = tempSeed.status.discount;
                 // 过滤已下载种、死种、小于5M的种、官种
-                if (!isDown && size > 5 * 1024 * 1024 && seeders > 10 && (msUp === 0 || msUp === 25)) {
+                if (!isDown && size > 5 * 1024 * 1024 && seeders > 0) {
                     console.log("正在获取第" + seedNum + "条下载链接...")
                     let link = getDownloadUrlSync(id);
                     if (link && link.startsWith(downloadPrefix)) {
                         linkSet.add(link);
-                    }else {
-                        throw "获取链接出错: "+link;
+                    } else {
+                        throw "获取链接出错: " + link;
                     }
                     // 暂停一定时间，不然会获取频繁
                     await randDelay(2200);
@@ -145,6 +145,7 @@ async function main() {
                 }
                 seedNum++;
             }
+            await randDelay(2200);
         }
     } catch (err) {
         console.error('出现错误:', err.message);

@@ -314,7 +314,7 @@ main_option(){
                 ;;
             3)
                 # 添加Swap
-                wget https://www.moerats.com/usr/shell/swap.sh && bash swap.sh
+                wget https://raw.githubusercontent.com/noirety/common-script/main/shell/swap.sh && bash swap.sh
                 ;;
             4)
                 echo_info "安装iperf3..."

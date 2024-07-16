@@ -168,8 +168,11 @@ modify_hostname() {
         return 1
     fi
 
+    chattr -i /etc/hostname
     # 修改主机名
     hostnamectl set-hostname $newhostname
+    # 锁定主机名
+    chattr +i /etc/hostname
 
     # 根据主机名修改相关文件
     sed -i "s/^\(127.0.0.1\s*\)\(.*\)/\1$newhostname/g" /etc/hosts

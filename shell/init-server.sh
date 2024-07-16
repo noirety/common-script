@@ -282,7 +282,7 @@ base_setting() {
 }
 
 main_option(){
-    while true; do
+    for i in {1..10}; do
         echo ""
         echo ""
         echo "请选择要执行的操作："
@@ -314,7 +314,7 @@ main_option(){
                 ;;
             3)
                 # 添加Swap
-                wget https://raw.githubusercontent.com/noirety/common-script/main/shell/swap.sh && bash swap.sh
+                wget https://raw.githubusercontent.com/noirety/common-scripts/main/shell/swap.sh && bash swap.sh
                 ;;
             4)
                 echo_info "安装iperf3..."

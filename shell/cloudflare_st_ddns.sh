@@ -131,11 +131,11 @@ main(){
 
   log "INFO" "Cloudflare优选程序开始执行"
 
-  /opt/CloudflareST/CloudflareST -n 10 -t 10
+  /opt/CloudflareST/CloudflareST -n 10 -t 10 -f /opt/CloudflareST/ip.txt -o /opt/CloudflareST/result.csv
 
   log "INFO" "Cloudflare优选程序执行完成"
 
-  cloudflare_ip=$(get_cloudflare_st_data "result.csv")
+  cloudflare_ip=$(get_cloudflare_st_data "/opt/CloudflareST/result.csv")
 
    # 检查输入是否为空
   if [ -z "$cloudflare_ip" ]

@@ -116,7 +116,7 @@ add_cloudflare_dns_records(){
   echo $json_data
 }
 
-get_cloudflare_st_data(){
+get_cloudflare_st_ip(){
   local filename=$1
   first_data=$(sed -n '2p' "$filename" | cut -d, -f1)
   echo $first_data
@@ -136,7 +136,7 @@ main(){
   then
     log "INFO" "当前域名:${ddns_domain_name},已存在DNS解析:${current_ip}"
     ${program_path}/CloudflareST -n 10 -t 40 -tp 443 -ip ${current_ip} -tlr 0.01 -sl 10 -tl 120 -o ${program_path}/result.csv
-    check_ip=$(get_cloudflare_st_data "${program_path}/result.csv")
+    check_ip=$(get_cloudflare_st_ip "${program_path}/result.csv")
     if [ "$check_ip" = "$current_ip" ]; then
       log "INFO" "当前域名:${ddns_domain_name},DNS解析:${current_ip},测试合格,程序结束"
       return 1
@@ -146,12 +146,12 @@ main(){
   fi
 
   log "INFO" "Cloudflare优选程序开始执行"
-
+  echo -n > ${program_path}/result.csv
   ${program_path}/CloudflareST -n 10 -t 10 -f ${program_path}/ip.txt -o ${program_path}/result.csv
 
   log "INFO" "Cloudflare优选程序执行完成"
 
-  cloudflare_ip=$(get_cloudflare_st_data "${program_path}/result.csv")
+  cloudflare_ip=$(get_cloudflare_st_ip "${program_path}/result.csv")
 
   if [ -z "$cloudflare_ip" ]
   then

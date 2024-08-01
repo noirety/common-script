@@ -1,23 +1,21 @@
 #!/bin/bash
 
+# 域名
 domain_name=''
-
+# 有ddns权限的cloudflare token
 token=''
-
+# 要解析的域名
 ddns_domain_name=''
-
+# cloudflare-st程序目录
 program_path='/opt/CloudflareST'
-
-# 日志文件
+# 输出日志文件
 logfile="${program_path}/cloudflare_st_ddns.log"
 
-# 定义颜色
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-# 定义日志函数
 log() {
   local level="$1"
   local message="$2"
@@ -43,12 +41,10 @@ log() {
   local log_message="[$timestamp] [$level] $message"
   # 输出日志到控制台
   echo -e "${color}${log_message}${NC}"
-
   # 记录日志到文件
   echo "$log_message" >> "$logfile"
 }
 
-# 函数：检查并安装缺失的软件
 check_and_install() {
   local package=$1
   if ! command -v $package &> /dev/null; then
@@ -136,11 +132,10 @@ main(){
   # 判断当前解析的ip是否合格
   current_ip=$(dig +short ${ddns_domain_name})
 
-  # 检查输入是否为空
   if [ -n "$current_ip" ]
   then
     log "INFO" "当前域名:${ddns_domain_name},已存在DNS解析:${current_ip}"
-    ${program_path}/CloudflareST -n 10 -t 40 -tp 443 -ip 104.16.165.228 -tlr 0.01 -sl 15 -tl 120 -o ${program_path}/result.csv
+    ${program_path}/CloudflareST -n 10 -t 40 -tp 443 -ip ${current_ip} -tlr 0.01 -sl 10 -tl 120 -o ${program_path}/result.csv
     check_ip=$(get_cloudflare_st_data "${program_path}/result.csv")
     if [ "$check_ip" = "$current_ip" ]; then
       log "INFO" "当前域名:${ddns_domain_name},DNS解析:${current_ip},测试合格,程序结束"
@@ -158,14 +153,13 @@ main(){
 
   cloudflare_ip=$(get_cloudflare_st_data "${program_path}/result.csv")
 
-   # 检查输入是否为空
   if [ -z "$cloudflare_ip" ]
   then
       log "ERROR" "获取cloudflare优选IP失败，结束进程"
       return 1
   fi
 
-  log "INFO" "获取cloudflare优选IP: $cloudflare_ip"
+  log "INFO" "获取cloudflare优选IP成功: $cloudflare_ip"
 
   # 获取cloudflare的zone_id
   zone_id=$(get_cloudflare_zone_id $domain_name $token)
@@ -176,14 +170,14 @@ main(){
       return 1
   fi
 
-  log "INFO" "获取cloudflare zone_id: $zone_id"
+  log "INFO" "获取cloudflare zone_id成功: $zone_id"
 
   # 根据zone_id获取DNS列表
   ids_and_names=$(get_cloudflare_dns_list $zone_id $token)
 
   log "INFO" "获取cloudflare dns解析列表: $ids_and_names"
 
-  # 查找name为best.sparkless.de的项，并获取id
+  # 查找name 为 ddns_domain_name 的项，并获取id
   dns_id=$(echo "$ids_and_names" | awk -v name="$ddns_domain_name" '$2 == name {print $1}')
 
   local alterRes

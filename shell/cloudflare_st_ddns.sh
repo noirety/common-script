@@ -2,12 +2,14 @@
 
 domain_name=''
 
-token=
+token=''
 
 ddns_domain_name=''
 
+program_path='/opt/CloudflareST'
+
 # 日志文件
-logfile="cloudflare_st_ddns.log"
+logfile="${program_path}/cloudflare_st_ddns.log"
 
 # 定义颜色
 RED='\033[0;31m'
@@ -129,13 +131,32 @@ main(){
   check_and_install bc
   check_and_install jq
 
+  echo -n > ${program_path}/result.csv
+
+  # 判断当前解析的ip是否合格
+  current_ip=$(dig +short ${ddns_domain_name})
+
+  # 检查输入是否为空
+  if [ -n "$current_ip" ]
+  then
+    log "INFO" "当前域名:${ddns_domain_name},已存在DNS解析:${current_ip}"
+    ${program_path}/CloudflareST -n 10 -t 40 -tp 443 -ip 104.16.165.228 -tlr 0.01 -sl 15 -tl 120 -o ${program_path}/result.csv
+    check_ip=$(get_cloudflare_st_data "${program_path}/result.csv")
+    if [ "$check_ip" = "$current_ip" ]; then
+      log "INFO" "当前域名:${ddns_domain_name},DNS解析:${current_ip},测试合格,程序结束"
+      return 1
+    else
+      log "INFO" "当前域名:${ddns_domain_name},DNS解析:${current_ip},测试不合格,继续进行Cloudflare优选"
+    fi
+  fi
+
   log "INFO" "Cloudflare优选程序开始执行"
 
-  /opt/CloudflareST/CloudflareST -n 10 -t 10 -f /opt/CloudflareST/ip.txt -o /opt/CloudflareST/result.csv
+  ${program_path}/CloudflareST -n 10 -t 10 -f ${program_path}/ip.txt -o ${program_path}/result.csv
 
   log "INFO" "Cloudflare优选程序执行完成"
 
-  cloudflare_ip=$(get_cloudflare_st_data "/opt/CloudflareST/result.csv")
+  cloudflare_ip=$(get_cloudflare_st_data "${program_path}/result.csv")
 
    # 检查输入是否为空
   if [ -z "$cloudflare_ip" ]

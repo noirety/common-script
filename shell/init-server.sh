@@ -356,7 +356,7 @@ main_option(){
                 ;;
             9)
                 echo_info "流媒体解锁检测开始..."
-                bash <(curl -L -s media.ispvps.com)
+                bash <(curl -L -s raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
                 echo_info "流媒体解锁检测完成"
                 ;;
             0)

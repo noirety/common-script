@@ -175,7 +175,7 @@ modify_hostname() {
     chattr +i /etc/hostname
 
     # 根据主机名修改相关文件
-    sed -i "s/^\(127.0.0.1\s*\)\(.*\)/\1$newhostname/g" /etc/hosts
+    echo "127.0.1.1        $newhostname" >> /etc/hosts
 
     systemctl restart systemd-hostnamed
 

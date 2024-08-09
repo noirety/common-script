@@ -151,7 +151,7 @@ update_install_software() {
     apt update
     check_error "更新软件包列表时出错"
 
-    apt install -y vim nano net-tools inetutils-ping telnet ufw
+    apt install -y vim nano net-tools inetutils-ping telnet ufw wget
     check_error "安装软件包时出错"
     echo_info "更新软件包完成"
     echo ""
@@ -175,7 +175,7 @@ modify_hostname() {
     chattr +i /etc/hostname
 
     # 根据主机名修改相关文件
-    echo "127.0.1.1        $newhostname" >> /etc/hosts
+    echo "127.0.1.1       $newhostname" >> /etc/hosts
 
     systemctl restart systemd-hostnamed
 
